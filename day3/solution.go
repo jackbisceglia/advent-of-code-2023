@@ -84,7 +84,6 @@ func number_has_adjacent_symbol(matrix []string, x int, y int, number_as_string 
 }
 
 func solve_p1(puzzle []string) int {
-	// code here
 	sum := 0
 	for y, line := range puzzle {
 		x := 0
@@ -115,7 +114,6 @@ func get_gear_ratio_by_symbol(matrix []string, x int, y int) (int, bool) {
 		for i > 0 && is_digit(rune(matrix[y][i])) {
 			i -= 1
 		}
-		// fmt.Printf("i before grabbing: %d\n", i)
 		full_number, _ := strconv.Atoi(get_first_number(matrix[y][i:]))
 
 		return full_number, i
@@ -132,12 +130,10 @@ func get_gear_ratio_by_symbol(matrix []string, x int, y int) (int, bool) {
 
 	// track adj numbers (and their left most indices to make sure we don't have dupes)
 	adjacent_nums := [][]int{}
-	// go through grouped directions: top, left, right, bottom
 	for _, direction := range directions {
 		new_x := x + direction[0]
 		new_y := y + direction[1]
 
-		// if we don't have a number to grab, continue
 		if !position_is_in_bounds(matrix, new_x, new_y) || !is_digit(rune(matrix[new_y][new_x])) {
 			continue
 		}
@@ -145,7 +141,6 @@ func get_gear_ratio_by_symbol(matrix []string, x int, y int) (int, bool) {
 		// grab num
 		full_number, left_idx := scan_left_and_grab_number(new_x, new_y)
 
-		// add it if it's not a dup
 		if !is_duplicate(adjacent_nums, full_number, left_idx) {
 			adjacent_nums = append(adjacent_nums, []int{full_number, left_idx})
 		}
@@ -159,20 +154,14 @@ func get_gear_ratio_by_symbol(matrix []string, x int, y int) (int, bool) {
 }
 
 func solve_p2(puzzle []string) int {
-	/*
-		find the gear ratio of every gear and add them all up so that the engineer can figure out
-		which gear needs to be replaced
-	**/
 	sum := 0
+	// scan through puzzle for potential gears (asterisks), then check if they're gears and sum them
 	for y, line := range puzzle {
-		// x := 0
-		// check for * only
 		for x := range line {
 			if rune(puzzle[y][x]) != '*' {
 				continue
 			}
 
-			// get ratio and if it's a gear
 			current_gear_ratio, is_gear := get_gear_ratio_by_symbol(puzzle, x, y)
 
 			if is_gear {
